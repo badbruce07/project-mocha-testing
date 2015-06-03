@@ -37,15 +37,36 @@ router.delete('/deleteuser/:id', function(req, res) {
 
 /*
  * PUT to update user
+ * req is an object containing information about the HTTP request that raised the event. In response to req, you use 'res' to send back the desired HTTP response.
  */
 router.put('/updateuser/:id', function(req, res) {
   var db = req.db
   var userToUpdate = req.params.id;
   var doc = { $set: req.body};
+
+  // UpdateByID takes 3 arguments (the ID, the query that info is modified and a callback function)
   db.collection('userlist').updateById(userToUpdate, doc ,function(err, result) {
-    res.send((result === 1) ? { msg: result } : { msg:'error: ' + err });
+    res.send((result === 1) ? req.body : { msg:'error: ' + err });
   });
 });
+
+//exports.updateuser = function(db) {
+//  return function(req, res) {
+//    var userToUpdate = req.params.id;
+//    var doc = { $set: req.body};
+//    db.collection('userlist').updateById(
+//        userToUpdate,
+//        doc,
+//        function(err, result) {
+//          res.send((result === 1) ? { msg: doc } : { msg:'error: ' + err });
+//
+//        }
+//    );
+//    db.collection('userlist').findById(userToUpdate);
+//  }
+//};
+
+
 
 
 module.exports = router;
