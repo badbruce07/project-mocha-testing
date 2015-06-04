@@ -102,20 +102,14 @@ describe('Update User', function(){
 //
 //});
 
-describe('Should write a user before any other test is done', function(){
+describe('Should write a user before any other test is checked', function(){
 
     before(function(done) {
 
+        setTimeout(function() {done()}, 1000);
         api.post('/users/adduser')
             .set('Accept','application/json')
-            .send({
-                username: "goldo",
-                email: "filipo@hotmail.com",
-                fullname: "Germaine Callet",
-                age: "23",
-                location: "Bordeaux",
-                gender: "Male"
-            })
+            .send({username: "flippa", email: "flipper@hotmail.com", fullname: "Margeoux Deville", age: "23", location: "Lens", gender: "Female" })
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function (err, res) {
@@ -130,17 +124,17 @@ describe('Should write a user before any other test is done', function(){
         api.get('/users/userlist')
             .set('Accept', 'application/json')
             .send({
-                username: "yankee",
+                username: "flippa"
             })
             .expect(200)
             .end(function(err, res) {
 
                 expect(err).to.equal(null);
                 expect(typeof res.body).to.equal('object');
-                console.log(res.body);
+                console.log(res.body[10]);
 
-                expect(res.body.username).to.equal("goldo");
-                expect(res.body.location).to.equal("Bordeaux");
+                expect(res.body[10].username).to.equal("flippa");
+                expect(res.body[10].location).to.equal("Lens");
                 done();
             });
     });
