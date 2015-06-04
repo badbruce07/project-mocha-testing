@@ -40,30 +40,128 @@ describe('UserApp', function(){
 
 describe('Update User', function(){
 
-    it('should be updated with a new name', function (done) {
+    it('should be updating the user info', function (done) {
         api.put('/users/updateuser/556dd5b867bd841c1ed735e6')
             .set('Accept', 'application/json')
             .send({
                 username: "chineybru",
-                email: "burususan@gmail.com",
+                email: "burususan@gmail.co",
                 fullname: "Bruce HFung",
                 age: "28",
-                location: "St. And",
+                location: "St. Andrew",
                 gender: "Male"
             })
             .expect(200)
             .end(function (err, res) {
-
+                expect(err).to.equal(null);
+                expect(typeof res.body).to.equal('object');
                 console.log(res.body);
-                //expect(res.body.username).to.equal("chineybrucey");
-                //expect(res.body.email).to.equal("burususan@gmail.com");
-                //expect(res.body.fullname).to.equal("Bruce HF");
-                //expect(res.body.age).to.equal("28");
-                //expect(res.body.location).to.equal("Kingston");
-                //expect(res.body.gender).to.equal("Male");
+
+                expect(res.body.username).to.equal("chineybru");
+                expect(res.body.email).to.equal("burususan@gmail.co");
+                expect(res.body.fullname).to.equal("Bruce HFung");
+                expect(res.body.age).to.equal("28");
+                expect(res.body.location).to.equal("St. Andrew");
+                expect(res.body.gender).to.equal("Male");
                 done();
             }
         );
     });
 
 });
+
+/*
+ *  This section deals with testing for authorization of the application page
+ */
+//describe('Unauthorized User', function(){
+//
+//    it('should not be able to access other users locations', function(done){
+//        api.get('/users/1')
+//            .set('Accept', 'application/json')
+//            .send({
+//                userId: 1
+//            })
+//            .expect(401)
+//            .end(function(err, res){
+//                if(err) return done(err);
+//                expect(res.error.text).to.equal("Unauthorized");
+//                done();
+//
+//
+//            });
+//    });
+//});
+
+//describe('test the order of Mocha hooks', function(){
+//    before( function(){ console.log('before'); });
+//    after( function(){ console.log('after'); });
+//    beforeEach( function(){ console.log('beforeEach'); });
+//    afterEach( function(){ console.log('afterEach'); });
+//    it('test 1', function(){ console.log('1'); });
+//    it('test 2', function(){ console.log('2'); });
+//
+//});
+
+describe('Should write a user before any other test is done', function(){
+
+    before(function(done) {
+
+        api.post('/users/adduser')
+            .set('Accept','application/json')
+            .send({
+                username: "goldo",
+                email: "filipo@hotmail.com",
+                fullname: "Germaine Callet",
+                age: "23",
+                location: "Bordeaux",
+                gender: "Male"
+            })
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function (err, res) {
+                expect(err).to.equal(null);
+                expect(typeof res.body).to.equal('object');
+                console.log(res.body);
+            });
+    });
+
+    it('should access the users information', function(done) {
+
+        api.get('/users/userlist')
+            .set('Accept', 'application/json')
+            .send({
+                username: "yankee",
+            })
+            .expect(200)
+            .end(function(err, res) {
+
+                expect(err).to.equal(null);
+                expect(typeof res.body).to.equal('object');
+                console.log(res.body);
+
+                expect(res.body.username).to.equal("goldo");
+                expect(res.body.location).to.equal("Bordeaux");
+                done();
+            });
+    });
+
+});
+
+//describe("a test", function(){
+//    var foo = false;
+//
+//    beforeEach(function(){
+//
+//        // simulate async call w/ setTimeout
+//        setTimeout(function(){
+//            foo = true;
+//            done();
+//        }, 50);
+//
+//    });
+//
+//    it("should pass", function(){
+//        expect(foo).equals(true);
+//    });
+//
+//});

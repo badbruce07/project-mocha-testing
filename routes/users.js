@@ -18,7 +18,7 @@ router.post('/adduser', function(req, res){
   var db = req.db;
   db.collection('userlist').insert(req.body, function(err, result){
     res.send(
-        (err === null) ? { msg: ''} : {msg: err }
+        (err === null) ? req.body : {msg: err }
     );
   });
 });
@@ -49,23 +49,6 @@ router.put('/updateuser/:id', function(req, res) {
     res.send((result === 1) ? req.body : { msg:'error: ' + err });
   });
 });
-
-//exports.updateuser = function(db) {
-//  return function(req, res) {
-//    var userToUpdate = req.params.id;
-//    var doc = { $set: req.body};
-//    db.collection('userlist').updateById(
-//        userToUpdate,
-//        doc,
-//        function(err, result) {
-//          res.send((result === 1) ? { msg: doc } : { msg:'error: ' + err });
-//
-//        }
-//    );
-//    db.collection('userlist').findById(userToUpdate);
-//  }
-//};
-
 
 
 
